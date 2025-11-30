@@ -1,0 +1,35 @@
+name: Amethyst Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3  # v6.0.0
+        with:
+          persist-credentials: false
+
+      - uses: lens0021/setup-amber@91c90d9537a43bdac2044a9b08ffc758b07c05e5  # v1.2.0
+        with:
+          amber-version: 0.5.1-alpha
+
+      - name: Build Amethyst
+        run: |
+          amber build src/main.ab
+          mv src/main.ab amethyst
+          tar -czf amethyst-${{ github.ref_name }}.tar.gz amethyst
+
+      - uses: svenstaro/upload-release-action@6b7fa9f267e90b50a19fef07b3596790bb941741 # 2.11.3
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: amethyst-${{ github.ref_name }}.tar.gz
+          tag: ${{ github.ref_name }}
+          overwrite: true
+
+
