@@ -1,5 +1,6 @@
 import { file_exists, file_extract, file_glob } from "std/fs"
 import { array_contains } from "std/array"
+import { input_confirm } from "std/env"
 import { file_download } from "std/http"
 import { slice } from "std/text"
 
